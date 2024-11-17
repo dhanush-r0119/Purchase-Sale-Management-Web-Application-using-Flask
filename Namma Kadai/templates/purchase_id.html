@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='purchase_id.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="sidebar-logo">
+        <a href="/" class="sidebar-item active" title="view the products list">
+            <i class="fa-solid fa-house icon-s"></i> Home
+        </a>
+        <a href="/purchase" class="sidebar-item" title="purchase the product">
+            <i class="fa-solid fa-cart-shopping icon-s"></i> Purchase
+
+        </a>
+        <a href="/sales" class="sidebar-item" title="sale the product">
+            <i class="fa-solid fa-tags icon-s"></i> Sale
+        </a>
+        <a href="/add_items" class="sidebar-item" title="add item to store">
+            <i class="fa-solid fa-cart-plus icon-s"></i> Add Item
+        </a>
+        <a href="/purchase_history" class="sidebar-item" title="view the purchase history">
+            <i class="fa-solid fa-clock-rotate-left icon-s"></i> Purchase History
+        </a>
+        <a href="/sales_history" class="sidebar-item" title="view the sale history">
+            <i class="fa-solid fa-chart-line icon-s"></i> Sale History
+        </a>
+    </div>
+
+
+    <div class="top-bar">
+        <h2 class="header-content">Namma Kadai</h2>
+    </div>
+    <div class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div id="flash-messages">
+            {% for category, message in messages %}
+            <h2 class="message {{ category }}" style="left: 1%;height: 5%;margin-top: 5%;">{{ message }}</h2>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <br><br>
+        <h2>Purchase Item</h2>
+
+        <form method="POST">
+            <p style="font-weight: bold;">Item ID: {{ item.item_id }}</p>
+            <p style="font-weight: bold;">Item Name: {{ item.item_name }}</p>
+            <p style="font-weight:bold ;">Available Qty:{{item.item_qty}}</p>
+            <label for="qty">Quantity:</label>
+            <input type="number" id="qty" name="qty" placeholder="Enter the qty of the item" required>
+            <label for="rate">Rate:</label>
+            <input type="number" id="rate" name="rate" step="0.01" placeholder="Enter the rate of the item" required>
+            <div class="form-buttons">
+                <button type="submit" class="button-link" style="width: 55%;">Purchase</button>
+                <a href="/" class="button-link" style="text-decoration: none;">Bact to Home</a>
+
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+    <script>
+        setTimeout(function () {
+            var flashMessages = document.getElementById('flash-messages');
+            if (flashMessages) {
+                flashMessages.style.transition = "opacity 0.5s ease";
+                flashMessages.style.opacity = "0";
+                setTimeout(() => flashMessages.remove(), 500);
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>

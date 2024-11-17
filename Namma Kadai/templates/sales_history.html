@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sale History</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='sale_history.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="sidebar-logo">
+        <a href="/" class="sidebar-item" title="view the products list">
+            <i class="fa-solid fa-house icon-s"></i> Home
+        </a>
+        <a href="/purchase" class="sidebar-item" title="purchase the product">
+            <i class="fa-solid fa-cart-shopping icon-s"></i> Purchase
+
+        </a>
+        <a href="/sales" class="sidebar-item" title="sale the product">
+            <i class="fa-solid fa-tags icon-s"></i> Sale
+        </a>
+        <a href="/add_items" class="sidebar-item" title="add item to store">
+            <i class="fa-solid fa-cart-plus icon-s"></i> Add Item
+        </a>
+        <a href="/purchase_history" class="sidebar-item" title="view the purchase history">
+            <i class="fa-solid fa-clock-rotate-left icon-s"></i> Purchase History
+        </a>
+        <a href="/sales_history" class="sidebar-item active" title="view the sale history">
+            <i class="fa-solid fa-chart-line icon-s"></i> Sale History
+        </a>
+    </div>
+
+
+    <div class="top-bar">
+        <h2 class="header-content">Namma Kadai</h2>
+    </div>
+
+    <div class="main-content">
+
+        <h2 style="margin-left: 4%;">Sale History</h2>
+
+        <div class="form-buttons">
+            <a href="/" style="text-decoration: none; width: 10%; margin-left: 80%; margin-top: -3%;">Back to Home</a>
+        </div>
+        <div class="search-container">
+            <input type="text" id="productSearch" class="search-bar" placeholder="Search by Item Id, Quantity, or Rate"
+                onkeyup="filterProducts()">
+        </div>
+
+        <table class="product-table" id="productTable">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Sale Time</th>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for i, item in new_his %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ i.sale_time }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ i.s_qty }}</td>
+                    <td>₹{{ i.s_rate }}</td>
+                    <td>₹{{ i.s_amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <center>
+            <div id="notFoundMessage" class="not-found" style="display: none; margin-top: 4%; margin-bottom: 4%;">No
+                items found</div>
+        </center>
+
+
+        <div class="pagination" id="paginationControls"></div>
+    </div>
+
+    <script>
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        const table = document.getElementById('productTable');
+        const rows = Array.from(table.getElementsByTagName('tbody')[0].getElementsByTagName('tr'));
+        const paginationControls = document.getElementById('paginationControls');
+
+        function displayPage(page) {
+            const startIndex = (page - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+
+            rows.forEach((row, index) => {
+                row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
+            });
+
+            updatePaginationControls(page);
+        }
+
+        function updatePaginationControls(page) {
+            paginationControls.innerHTML = '';
+            const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.className = (i === page) ? 'active' : '';
+                button.onclick = () => {
+                    currentPage = i;
+                    displayPage(currentPage);
+                };
+                paginationControls.appendChild(button);
+            }
+        }
+
+
+        displayPage(currentPage);
+
+
+        function filterProducts() {
+            let input = document.getElementById('productSearch').value.toUpperCase();
+            let table = document.getElementById('productTable');
+            let rows = Array.from(table.getElementsByTagName('tr')).slice(1);
+            let found = false;
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName('td');
+                let itemId = cells[2].textContent.toUpperCase();
+                let quantity = cells[3].textContent.toUpperCase();
+                let rate = cells[4].textContent.toUpperCase();
+
+
+                if (itemId.includes(input) || quantity.includes(input) || rate.includes(input)) {
+                    row.style.display = '';
+                    found = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+
+            document.getElementById('notFoundMessage').style.display = found ? 'none' : 'block';
+
+
+            if (!input) {
+                currentPage = 1;
+                displayPage(currentPage);
+            }
+        }
+    </script>
+</body>
+
+</html>

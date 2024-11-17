@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='edit_item.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Edit Item</title>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Logo" class="sidebar-logo">
+        <a href="/" class="sidebar-item active" title="view the products list">
+            <i class="fa-solid fa-house icon-s"></i> Home
+        </a>
+        <a href="/purchase" class="sidebar-item" title="purchase the product">
+            <i class="fa-solid fa-cart-shopping icon-s"></i> Purchase
+
+        </a>
+        <a href="/sales" class="sidebar-item" title="sale the product">
+            <i class="fa-solid fa-tags icon-s"></i> Sale
+        </a>
+        <a href="/add_items" class="sidebar-item" title="add item to store">
+            <i class="fa-solid fa-cart-plus icon-s"></i> Add Item
+        </a>
+        <a href="/purchase_history" class="sidebar-item" title="view the purchase history">
+            <i class="fa-solid fa-clock-rotate-left icon-s"></i> Purchase History
+        </a>
+        <a href="/sales_history" class="sidebar-item" title="view the sale history">
+            <i class="fa-solid fa-chart-line icon-s"></i> Sale History
+        </a>
+    </div>
+
+    <div class="top-bar">
+        <h2 class="header-content">Namma Kadai</h2>
+    </div>
+    <div class="main-content">
+        <h2>Edit Item</h2>
+
+        {% with messages=get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div id="flash-messages">
+            {% for category, message in messages %}
+            <p class="message {{category}}"> {{message}}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="item_name">Item Name:</label>
+            <input type="text" name="item_name" value="{{ items.item_name }}" placeholder="Enter the item name to edit"
+                required>
+            <div class="form-buttons">
+                <button type="submit" class="button-link">Update Item</button>
+                <a href="/" class="button-link">Back to Home</a>
+            </div>
+
+        </form>
+    </div>
+    <script>
+
+        setTimeout(function () {
+            var flashMessages = document.getElementById('flash-messages');
+            if (flashMessages) {
+                flashMessages.style.transition = "opacity 0.5s ease";
+                flashMessages.style.opacity = "0";
+                setTimeout(() => flashMessages.remove(), 500);
+            }
+        }, 2000);
+    </script>
+</body>
+
+</html>
