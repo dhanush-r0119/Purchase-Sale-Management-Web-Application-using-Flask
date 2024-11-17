@@ -125,7 +125,7 @@ def sale():
             db.session.commit()
             flash('Sale successful!', 'success')
         else:
-            flash('Not enough stock or item does not exist!', 'error')
+            flash('Not enough stock', 'error')
         
         return redirect(url_for('sale'))
     return render_template('sales.html', company=company, items=items)
